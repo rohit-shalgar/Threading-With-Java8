@@ -1,0 +1,37 @@
+ThreadPools
+    - TP's are collection of threads which execute tasks.
+    - Threads whole lifecycle is managed by TP's.
+
+java.util.concurrent
+    - Executor( simplest interface) with execute() method
+    - ExecutorService - implementation - ThreadPoolExecutor
+    - BlockingQueue is used to hold runnable tasks with execute() method.
+
+Number of threads
+  = Number of CPUs * Target CPU utilization * (1 + W/C)
+
+Number of CPUs (Runtime.getRuntime().availableProcessors())
+Target CPU utilization (in range, [0, 1])
+Wait time (W)
+Compute time (C)
+
+ for compute-intensive tasks (usually small tasks),
+        it can be a good idea to benchmark the thread pool with the number of threads equal with to number of processors
+            or number of processors + 1 (to prevent potential pauses).
+        For time-consuming and blocking tasks (for example, I/O),
+            a larger pool is better since threads will not be available for scheduling at a high rate.
+        Also, pay attention to interferences with other pools (for example, database connections pools, and socket connection pools).
+
+
+ScheduledExecutorService
+    ScheduledExecutorService is an ExecutorService that can schedule tasks for execution after a given delay,
+    or execute periodically. Here, we have methods such as schedule(), scheduleAtFixedRate(), and scheduleWithFixedDelay().
+    While schedule() is used for one-shot tasks, scheduleAtFixedRate() and scheduleWithFixedDelay() are used for periodic tasks.
+
+
+WorkStealingAlgorithm:
+    -Executors.newWorkStealingPool() - best suited for large number of small tasks
+    -underlying mechanism - ForkJoinPool
+    -each thread created by WorkStealingPool will have its local deque copy of the tasks.
+    -It will remove the tasks from local queue, when empty it will steal from other end of other threads deque, if not found with any task,
+        it will go get the tasks from central queue.

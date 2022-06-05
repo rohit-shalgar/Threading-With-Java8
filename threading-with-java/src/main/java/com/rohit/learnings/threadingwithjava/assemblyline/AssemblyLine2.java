@@ -1,37 +1,31 @@
-package com.rohit.learnings.threadingwithjava.assemblyline.singlethread;
+package com.rohit.learnings.threadingwithjava.assemblyline;
 
 
-//3 Producers is and 2 consumers working in parallel - fixed number of threads.
-
+//Producer is faster than consumer and does not wait.
 import java.util.Random;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.logging.Logger;
 
-public final class AssemblyLineMultiplePC {
+public final class AssemblyLine2 {
 
-    private static final Logger LOGGER = Logger.getLogger(AssemblyLineMultiplePC.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(AssemblyLine2.class.getName());
 
-    private static final int PRODUCERS = 3;
-    private static final int CONSUMERS = 2;
     private static final Producer producer = new Producer();
     private static final Consumer consumer = new Consumer();
 
     private static ExecutorService producerService;
     private static ExecutorService consumerService;
 
-    private static final ConcurrentLinkedQueue<String> queue = new ConcurrentLinkedQueue<>();
+    private static BlockingQueue<String> queue = new LinkedBlockingQueue<>();
 
 
-    private AssemblyLineMultiplePC() {
+    private AssemblyLine2() {
         throw new AssertionError("There is a single assembly line.");
     }
 
-    private static final int MAX_PROD_TIME_MS = 2 * 1000;
-    private static final int MAX_CONS_TIME_MS = 2 * 1000;
-    private static final int TIMEOUT_MS = (MAX_CONS_TIME_MS + MAX_PROD_TIME_MS) * (PRODUCERS+CONSUMERS);
+    private static final int MAX_PROD_TIME_MS = 5 * 1000;
+    private static final int MAX_CONS_TIME_MS = 7 * 1000;
+    private static final int TIMEOUT_MS = MAX_CONS_TIME_MS + 1000;
     private static final Random rnd = new Random();
     private static volatile boolean runningProducer;
 
@@ -43,7 +37,7 @@ public final class AssemblyLineMultiplePC {
                 String bulb = "Bulb-" + rnd.nextInt(1000);
                 try {
                     Thread.sleep(rnd.nextInt(MAX_PROD_TIME_MS));
-                    boolean isTransferred = queue.offer(bulb);
+                    boolean isTransferred = queue.offer(bulb, TIMEOUT_MS, TimeUnit.MILLISECONDS);
                     if (isTransferred) {
                         LOGGER.info("transferred-" + bulb);
                     }
@@ -96,17 +90,12 @@ public final class AssemblyLineMultiplePC {
         LOGGER.info("\n\n Remaining bulbs in the queue - " + queue + "\n\n");
 
         runningProducer = true;
-        producerService = Executors.newFixedThreadPool(PRODUCERS);
-        for (int i = 0; i < PRODUCERS; i++) {
-            producerService.execute(producer);
-        }
+        producerService = Executors.newSingleThreadExecutor();
+        producerService.execute(producer);
 
         runningConsumer = true;
-        consumerService = Executors.newFixedThreadPool(CONSUMERS);
-        for (int i = 0; i < CONSUMERS; i++) {
-            producerService.execute(consumer);
-        }
-
+        consumerService = Executors.newSingleThreadExecutor();
+        consumerService.execute(consumer);
 
     }
 
@@ -136,9 +125,9 @@ public final class AssemblyLineMultiplePC {
     private static boolean shutDownExecutorService(ExecutorService executorService) {
         executorService.shutdown();
         try {
-            if (!executorService.awaitTermination(TIMEOUT_MS , TimeUnit.MILLISECONDS)) {
+            if (!executorService.awaitTermination(TIMEOUT_MS * 2, TimeUnit.MILLISECONDS)) {
                 executorService.shutdownNow();
-                return executorService.awaitTermination(TIMEOUT_MS, TimeUnit.MILLISECONDS);
+                return executorService.awaitTermination(TIMEOUT_MS * 2, TimeUnit.MILLISECONDS);
             }
             return true;
         } catch (InterruptedException e) {

@@ -1,19 +1,19 @@
-package com.rohit.learnings.threadingwithjava.assemblyline.singlethread;
+package com.rohit.learnings.threadingwithjava.assemblyline;
 
-public class TestAssemblyLine2 {
+public class TestAssemblyLine {
 
     public static void main(String[] args) throws InterruptedException {
 
         System.setProperty("java.util.logging.SimpleFormatter.format",
                 "[%1$tT] [%4$-7s] %5$s %n");
 
-        AssemblyLine2.startAssemblyLine();
+        AssemblyLine.startAssemblyLine();
         Thread.sleep(10 * 1000);
-        AssemblyLine2.shutDownAssemblyLine();
+        AssemblyLine.shutDownAssemblyLine();
 
         System.out.println("Starting the assembly line again...");
-        AssemblyLine2.startAssemblyLine();
+        AssemblyLine.startAssemblyLine();
         Thread.sleep(10 * 1000);
-        AssemblyLine2.shutDownAssemblyLine();
+        AssemblyLine.shutDownAssemblyLine();
     }
 }

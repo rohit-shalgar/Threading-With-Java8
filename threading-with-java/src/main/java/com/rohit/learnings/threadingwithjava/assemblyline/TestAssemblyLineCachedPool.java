@@ -1,4 +1,4 @@
-package com.rohit.learnings.threadingwithjava.assemblyline.singlethread;
+package com.rohit.learnings.threadingwithjava.assemblyline;
 
 public class TestAssemblyLineCachedPool {
 

@@ -1,10 +1,9 @@
-package com.rohit.learnings.threadingwithjava.assemblyline.singlethread;
+package com.rohit.learnings.threadingwithjava.assemblyline;
 
 //Producer does not wait for consumer and is able to pack bulbs faster
 //As the loaD ON CONSUMER increases,we need to add more consumers using cached pool
 // A supervisior will be present to see the proper flow.
 
-import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;

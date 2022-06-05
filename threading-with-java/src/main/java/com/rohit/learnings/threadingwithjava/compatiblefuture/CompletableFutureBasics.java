@@ -63,7 +63,7 @@ public class CompletableFutureBasics {
                         }
                 )
                 .thenApply(invoice -> invoice.concat("134$")).exceptionally(
-                        (ex)-> "This is how you handle exceptions"
+                        (ex) -> "This is how you handle exceptions"
                 )
                 .thenApply(invoice -> invoice.concat("Signed"));
 

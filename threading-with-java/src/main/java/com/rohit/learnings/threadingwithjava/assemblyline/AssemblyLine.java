@@ -1,4 +1,4 @@
-package com.rohit.learnings.threadingwithjava.assemblyline.singlethread;
+package com.rohit.learnings.threadingwithjava.assemblyline;
 
 /*
     We will use Executors.newSingleThreadExecutor() which will create a single thread for producer and consumer

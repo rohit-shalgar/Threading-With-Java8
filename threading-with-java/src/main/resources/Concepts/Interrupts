@@ -1,0 +1,6 @@
+As a rule of thumb, after catching InterruptedException,
+do not forget to restore the interrupt by calling Thread.currentThread().interrupt().
+
+the only acceptable case when we can swallow an interrupt (not restore the interrupt) is
+when we can control the entire call stack (for example, extend Thread).
+Otherwise, catching InterruptedException should contain Thread.currentThread().interrupt() as well.

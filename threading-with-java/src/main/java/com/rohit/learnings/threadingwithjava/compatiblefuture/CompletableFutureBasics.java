@@ -19,17 +19,15 @@ import java.util.concurrent.Executors;
 public class CompletableFutureBasics {
 
     public static void printOrder() throws ExecutionException, InterruptedException {
-        CompletableFuture<Void> completableFuture = CompletableFuture.runAsync(
-                () -> {
-                    System.out.println("Order was printed by -" + Thread.currentThread().getName());
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        Thread.currentThread().interrupt();
-                    }
+        CompletableFuture<Void> completableFuture = CompletableFuture.runAsync(() -> {
+            System.out.println("Order was printed by -" + Thread.currentThread().getName());
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
 
-                }
-        );
+        });
         completableFuture.get();
     }
 
@@ -51,21 +49,15 @@ public class CompletableFutureBasics {
 
     //fetch invoice number, attach total and sign it.
     public static String fetchInvoiceTotalSign() throws ExecutionException, InterruptedException {
-        CompletableFuture<String> invoiceService = CompletableFuture.supplyAsync(
-                        () -> {
-                            System.out.println("Invoice is being fetched by -" + Thread.currentThread().getName());
-                            try {
-                                Thread.sleep(1000);
-                            } catch (InterruptedException e) {
-                                Thread.currentThread().interrupt();// this insures the state change.
-                            }
-                            return "Invoice #3421";
-                        }
-                )
-                .thenApply(invoice -> invoice.concat("134$")).exceptionally(
-                        (ex) -> "This is how you handle exceptions"
-                )
-                .thenApply(invoice -> invoice.concat("Signed"));
+        CompletableFuture<String> invoiceService = CompletableFuture.supplyAsync(() -> {
+            System.out.println("Invoice is being fetched by -" + Thread.currentThread().getName());
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();// this insures the state change.
+            }
+            return "Invoice #3421";
+        }).thenApply(invoice -> invoice.concat("134$")).exceptionally((ex) -> "This is how you handle exceptions").thenApply(invoice -> invoice.concat("Signed"));
 
         return invoiceService.get();
 

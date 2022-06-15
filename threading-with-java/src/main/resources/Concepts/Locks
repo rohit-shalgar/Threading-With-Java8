@@ -15,3 +15,6 @@ the synchronized keyword can be used only with static/non-static methods (not co
 
 Two threads can concurrently execute non-synchronized, synchronized static, and synchronized non-static methods.
 
+It is safe to call a synchronized method from another synchronized method of the same class that requires the same lock.
+This works because synchronized is re-entrant (as long as it is the same lock,
+the lock acquired for the first method is used in the second method as well). 

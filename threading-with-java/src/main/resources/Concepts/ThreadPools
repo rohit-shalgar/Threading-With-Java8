@@ -35,3 +35,14 @@ WorkStealingAlgorithm:
     -each thread created by WorkStealingPool will have its local deque copy of the tasks.
     -It will remove the tasks from local queue, when empty it will steal from other end of other threads deque, if not found with any task,
         it will go get the tasks from central queue.
+
+Executors.newSingleThreadExecutor();
+Executors.newCachedThreadPool(
+                (Runnable r) -> new Thread(consumerGroup, r) // number of active threads in a group, this is thread factory implementation.
+        );
+
+Executors.newFixedThreadPool(PRODUCERS);
+
+executor.shutdown();
+executor.awaitTermination(Integer.MAX_VALUE, TimeUnit.MILLISECONDS);// blocks the thread till they finish the work
+or waits for the specified time to get the work done or if interupt happens, whichever comes first.

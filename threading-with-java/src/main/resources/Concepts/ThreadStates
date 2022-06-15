@@ -4,3 +4,16 @@ Blocked - thread is blocked due to I/O or synchronisation.
 Waiting - thread.join() , waits for the thread to die.
 Timed waiting - thread sleep or join with mills.
 Terminated - A thread that successfully finishes its job or is abnormally interrupted is in the TERMINATE state.
+
+
+In order to write thread-safe classes, we can consider the following techniques:
+
+Have no state (classes with no instance and static variables)
+Have state, but don't share it (for example, use instance variables via Runnable, ThreadLocal, and so on)
+Have state, but an immutable state
+Use message-passing (for example, as Akka framework)
+Use synchronized blocks
+Use volatile variables
+Use data structures from the java.util.concurrent package
+Use synchronizers (for example, CountDownLatch and Barrier)
+Use locks from the java.util.concurrent.locks package
